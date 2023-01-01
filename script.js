@@ -7,11 +7,20 @@ let rwd = controls.querySelector('.rewind');
 let fwd = controls.querySelector('.forward');
 // let fullscreen = controls.querySelector('.fullscreen');
 
+
+let volumeIcon = controls.querySelector('.volume .icon');
+let volumeProgressBar = controls.querySelector('.volume .volume__progress')
+let volumeProgressBarInput = volumeProgressBar.querySelector('input');
+
+
 let timerArea = controls.querySelector('.timer');
 let currentTime = timerArea.querySelector('.currentTime');
 let videoTime = timerArea.querySelector('.videoTime');
 
 let timerBar = controls.querySelector('.controls__progressbar-current');
+
+media.volume = .5;
+
 
 media.addEventListener('timeupdate' , function() {
     currentTime.textContent = getTime(media.currentTime);
@@ -33,17 +42,27 @@ play.addEventListener('click' , function() {
 })
 
 rwd.addEventListener('click' , function() {
-    media.currentTime = media.currentTime - 10;
+    media.currentTime = media.currentTime - 5;
 });
 
 
 fwd.addEventListener('click' , function() {
-    media.currentTime = media.currentTime + 10;
+    media.currentTime = media.currentTime + 5;
 });
 
 
 timerBar.addEventListener('input' , function() {
     media.currentTime = (this.value / 100) * media.duration
+})
+
+
+volumeIcon.addEventListener('click' , function() {
+    volumeProgressBar.classList.toggle('active');
+})
+
+volumeProgressBarInput.addEventListener('input' , function() {
+   media.volume = this.value / 100; 
+   this.style = `background : linear-gradient(90deg, rgba(230,126,34,1) ${this.value}%, #e1e1e1 0%);`
 })
 
 function togglePlayIcon() {
