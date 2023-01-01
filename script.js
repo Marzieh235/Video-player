@@ -1,33 +1,74 @@
-let PlayerArea = document.querySelector('.myplayer');
-let media = PlayerArea.querySelector('video');
-let controls = PlayerArea.querySelector('.myplayer__controls');
-let play = controls.querySelector('.play')
-let rwd = controls.querySelector('.rewind')
-let fwd = controls.querySelector('.forward')
-// let fullscreen = controls.querySelector('.fullscreen')
+let playerArea = document.querySelector('.myplayer');
+let media = playerArea.querySelector('video');
+let controls = playerArea.querySelector('.myplayer__controls');
 
+let play = controls.querySelector('.play');
+let rwd = controls.querySelector('.rewind');
+let fwd = controls.querySelector('.forward');
+// let fullscreen = controls.querySelector('.fullscreen');
 
-play.addEventListener('click', function () {
+let timerArea = controls.querySelector('.timer');
+let currentTime = timerArea.querySelector('.currentTime');
+let videoTime = timerArea.querySelector('.videoTime');
+
+let timerBar = controls.querySelector('.controls__progressbar-current');
+
+media.addEventListener('timeupdate' , function() {
+    currentTime.textContent = getTime(media.currentTime);
+
+    let barLength = (media.currentTime / media.duration) * 100;
+    timerBar.style = `background : linear-gradient(90deg, rgba(230,126,34,1) ${barLength}%, #e1e1e1 0%);`
+    timerBar.value = barLength;
+})
+
+play.addEventListener('click' , function() {
+    videoTime.textContent = getTime(media.duration);
     if(media.paused) {
         togglePlayIcon();
         media.play();
     } else {
-        media.pause();
         togglePlayIcon();
+        media.pause();
     }
 })
 
-
 rwd.addEventListener('click' , function() {
-    media.currentTime = media.currentTime - 10 ;
-})
+    media.currentTime = media.currentTime - 10;
+});
+
+
 fwd.addEventListener('click' , function() {
-    media.currentTime = media.currentTime + 10 ;
+    media.currentTime = media.currentTime + 10;
+});
+
+
+timerBar.addEventListener('input' , function() {
+    media.currentTime = (this.value / 100) * media.duration
 })
 
-
-function togglePlayIcon(){
+function togglePlayIcon() {
     let icon = play.querySelector('i');
     icon.classList.toggle('ion-md-pause');
     icon.classList.toggle('ion-md-play');
 }
+
+function getTime(time) {
+    let minutes = Math.floor(time / 60);
+    let seconds = Math.floor(time - ( minutes * 60 ))
+    let minuteValue;
+    let secondsValue;
+
+    if(minutes < 10) {
+        minuteValue = '0' + minutes;
+    } else {
+        minuteValue = minutes;
+    }
+
+    if(seconds < 10) {
+        secondsValue = '0' + seconds;
+    } else {
+        secondsValue = seconds;
+    }
+
+    return minuteValue + ':' + secondsValue
+} 
